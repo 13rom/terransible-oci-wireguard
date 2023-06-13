@@ -1,34 +1,33 @@
 ---
-  - name: Ansible copy directory to the remote server
-    copy:
-      src: ./files/
-      dest: /wirehole
+- name: Ansible copy directory to the remote server
+  copy:
+    src: ./files/
+    dest: /wireguard
 
-  - name: Start Docker containers using Docker-Compose
-    command: docker-compose  -f /wirehole/docker-compose.yml up -d
-    register: output
+- name: Start Docker containers using Docker-Compose
+  command: docker-compose -f /wireguard/docker-compose.yml up -d
+  register: output
 
-  - name: Watch docker-compose output
-    debug:
-      var: output
+- name: Watch docker-compose output
+  debug:
+    var: output
+# - name: Pause for 15 seconds to generate Wireguard client configs
+#   pause:
+#     seconds: 15
 
-  - name: Pause for 15 seconds to generate Wireguard client configs
-    pause:
-      seconds: 15
-
-  - name: Copy individual files
-    synchronize:
-      src: "{{ item }}"
-      dest: ../wg_client_configs/oci
-      mode: pull
-    with_items:
-      - "/wirehole/wireguard/config/peer1"
-      - "/wirehole/wireguard/config/peer2"
-      - "/wirehole/wireguard/config/peer3"
-      - "/wirehole/wireguard/config/peer4"
-      - "/wirehole/wireguard/config/peer5"
-      - "/wirehole/wireguard/config/peer6"
-      - "/wirehole/wireguard/config/peer7"
-      - "/wirehole/wireguard/config/peer8"
-      - "/wirehole/wireguard/config/peer9"
-      - "/wirehole/wireguard/config/peer10"
+# - name: Copy individual files
+#   synchronize:
+#     src: "{{ item }}"
+#     dest: ../wg_client_configs/oci
+#     mode: pull
+#   with_items:
+#     - "/wireguard/app/config/peer1"
+#     - "/wireguard/app/config/peer2"
+#     - "/wireguard/app/config/peer3"
+#     - "/wireguard/app/config/peer4"
+#     - "/wireguard/app/config/peer5"
+#     - "/wireguard/app/config/peer6"
+#     - "/wireguard/app/config/peer7"
+#     - "/wireguard/app/config/peer8"
+#     - "/wireguard/app/config/peer9"
+#     - "/wireguard/app/config/peer10"
