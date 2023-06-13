@@ -52,7 +52,7 @@ resource "oci_core_security_list" "wirehole_security_list" {
     protocol    = "all"
   }
 
-  // allow inbound ssh traffic from a all ports to port
+  // allow inbound ssh traffic from all ports to port 22
   ingress_security_rules {
     protocol  = "6" // tcp
     source    = "0.0.0.0/0"
@@ -65,8 +65,26 @@ resource "oci_core_security_list" "wirehole_security_list" {
       }
 
       // These values correspond to the destination port range.
-      min = 22
-      max = 22
+      min = var.ssh_port
+      max = var.ssh_port
+    }
+  }
+
+  // allow inbound http traffic from all ports to port 5000
+  ingress_security_rules {
+    protocol  = "6" // tcp
+    source    = "0.0.0.0/0"
+    stateless = false
+
+    tcp_options {
+      source_port_range {
+        min = 1
+        max = 65535
+      }
+
+      // These values correspond to the destination port range.
+      min = var.wireguard_ui_port
+      max = var.wireguard_ui_port
     }
   }
 

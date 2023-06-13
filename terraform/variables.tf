@@ -31,6 +31,15 @@ variable "instance_display_name" {
 variable "wireguard_port" {
   default = 51820
 }
+
+variable "wireguard_ui_port" {
+  default = 5000
+}
+
+variable "ssh_port" {
+  default = 22
+}
+
 variable "instance_shape" {
   # Free-Tier is VM.Standard.E2.1.Micro
   default = "VM.Standard.E2.1.Micro"
