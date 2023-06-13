@@ -13,7 +13,7 @@ services:
     environment:
       - SERVERPORT=51820
       - SERVERURL=auto
-      - PEERS=10 # How many peers to generate for you (clients)
+      - PEERS=1 # How many peers to generate for you (clients)
       - PEERDNS=auto
       - INTERNAL_SUBNET=10.100.100.0
     volumes:
@@ -48,6 +48,10 @@ services:
       - WG_CONF_TEMPLATE
       - WGUI_MANAGE_START=true
       - WGUI_MANAGE_RESTART=true
+      - WGUI_SERVER_INTERFACE_ADDRESSES=10.100.100.0/24
+      - WGUI_SERVER_LISTEN_PORT
+      - WGUI_SERVER_POST_UP_SCRIPT=iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+      - WGUI_SERVER_POST_DOWN_SCRIPT=iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
     logging:
       driver: json-file
       options:
