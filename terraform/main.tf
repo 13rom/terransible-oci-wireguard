@@ -6,44 +6,44 @@ provider "oci" {
   region           = var.region
 }
 
-resource "oci_core_vcn" "wirehole_vcn" {
+resource "oci_core_vcn" "sandbox_vcn" {
   cidr_block     = var.vcn_cidr_block
   compartment_id = var.compartment_ocid
   display_name   = "${var.display_name}-VCN"
   dns_label      = "${var.display_name}VCN"
 }
 
-resource "oci_core_subnet" "wirehole_subnet" {
+resource "oci_core_subnet" "sandbox_subnet" {
   availability_domain = var.free_tier_availability_domain
   cidr_block          = var.subnet_cidr_block
   display_name        = "${var.display_name}-Subnet"
   dns_label           = "${var.display_name}Subnet"
-  security_list_ids   = [oci_core_security_list.wirehole_security_list.id]
+  security_list_ids   = [oci_core_security_list.sandbox_security_list.id]
   compartment_id      = var.compartment_ocid
-  vcn_id              = oci_core_vcn.wirehole_vcn.id
-  route_table_id      = oci_core_vcn.wirehole_vcn.default_route_table_id
-  dhcp_options_id     = oci_core_vcn.wirehole_vcn.default_dhcp_options_id
+  vcn_id              = oci_core_vcn.sandbox_vcn.id
+  route_table_id      = oci_core_vcn.sandbox_vcn.default_route_table_id
+  dhcp_options_id     = oci_core_vcn.sandbox_vcn.default_dhcp_options_id
 }
 
-resource "oci_core_internet_gateway" "wirehole_internet_gateway" {
+resource "oci_core_internet_gateway" "sandbox_internet_gateway" {
   compartment_id = var.compartment_ocid
   display_name   = "${var.display_name}-IG"
-  vcn_id         = oci_core_vcn.wirehole_vcn.id
+  vcn_id         = oci_core_vcn.sandbox_vcn.id
 }
 
-resource "oci_core_default_route_table" "test_route_table" {
-  manage_default_resource_id = oci_core_vcn.wirehole_vcn.default_route_table_id
+resource "oci_core_default_route_table" "sandbox_route_table" {
+  manage_default_resource_id = oci_core_vcn.sandbox_vcn.default_route_table_id
 
   route_rules {
     destination       = "0.0.0.0/0"
     destination_type  = "CIDR_BLOCK"
-    network_entity_id = oci_core_internet_gateway.wirehole_internet_gateway.id
+    network_entity_id = oci_core_internet_gateway.sandbox_internet_gateway.id
   }
 }
 
-resource "oci_core_security_list" "wirehole_security_list" {
+resource "oci_core_security_list" "sandbox_security_list" {
   compartment_id = var.compartment_ocid
-  vcn_id         = oci_core_vcn.wirehole_vcn.id
+  vcn_id         = oci_core_vcn.sandbox_vcn.id
   display_name   = "${var.display_name}-SecurityList"
 
   // allow outbound tcp traffic on all ports
@@ -120,14 +120,14 @@ resource "oci_core_security_list" "wirehole_security_list" {
   }
 }
 
-resource "oci_core_instance" "wirehole_instance" {
+resource "oci_core_instance" "wireguard_instance" {
   availability_domain = var.free_tier_availability_domain
   compartment_id      = var.compartment_ocid
   display_name        = var.instance_display_name
   shape               = var.instance_shape
 
   create_vnic_details {
-    subnet_id        = oci_core_subnet.wirehole_subnet.id
+    subnet_id        = oci_core_subnet.sandbox_subnet.id
     display_name     = "${var.instance_display_name}-VNIC"
     assign_public_ip = true
     hostname_label   = var.instance_display_name
@@ -147,9 +147,9 @@ resource "oci_core_instance" "wirehole_instance" {
   }
 }
 
-resource "oci_core_instance_console_connection" "wirehole_instance_console_connection" {
+resource "oci_core_instance_console_connection" "wireguard_instance_console_connection" {
   #Required
-  instance_id = oci_core_instance.wirehole_instance.id
+  instance_id = oci_core_instance.wireguard_instance.id
   public_key  = var.ssh_public_key
 }
 
@@ -162,7 +162,7 @@ data "oci_identity_availability_domain" "ad" {
 data "oci_core_vnic_attachments" "instance_vnics" {
   compartment_id      = var.compartment_ocid
   availability_domain = var.free_tier_availability_domain
-  instance_id         = oci_core_instance.wirehole_instance.id
+  instance_id         = oci_core_instance.wireguard_instance.id
 }
 
 # Gets the OCID of the first (default) vNIC
@@ -171,9 +171,9 @@ data "oci_core_vnic" "instance_vnic" {
 }
 
 output "connect_with_ssh" {
-  value = oci_core_instance_console_connection.wirehole_instance_console_connection.connection_string
+  value = oci_core_instance_console_connection.wireguard_instance_console_connection.connection_string
 }
 
 output "connect_with_vnc" {
-  value = oci_core_instance_console_connection.wirehole_instance_console_connection.vnc_connection_string
+  value = oci_core_instance_console_connection.wireguard_instance_console_connection.vnc_connection_string
 }
