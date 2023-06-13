@@ -11,23 +11,23 @@
 - name: Watch docker-compose output
   debug:
     var: output
-# - name: Pause for 15 seconds to generate Wireguard client configs
-#   pause:
-#     seconds: 15
 
+- name: Pause before finishing
+  pause:
+    seconds: 15
 # - name: Copy individual files
 #   synchronize:
 #     src: "{{ item }}"
 #     dest: ../wg_client_configs/oci
 #     mode: pull
 #   with_items:
-#     - "/wireguard/app/config/peer1"
-#     - "/wireguard/app/config/peer2"
-#     - "/wireguard/app/config/peer3"
-#     - "/wireguard/app/config/peer4"
-#     - "/wireguard/app/config/peer5"
-#     - "/wireguard/app/config/peer6"
-#     - "/wireguard/app/config/peer7"
-#     - "/wireguard/app/config/peer8"
-#     - "/wireguard/app/config/peer9"
-#     - "/wireguard/app/config/peer10"
+#     - "/wireguard/config/peer1"
+#     - "/wireguard/config/peer2"
+#     - "/wireguard/config/peer3"
+#     - "/wireguard/config/peer4"
+#     - "/wireguard/config/peer5"
+#     - "/wireguard/config/peer6"
+#     - "/wireguard/config/peer7"
+#     - "/wireguard/config/peer8"
+#     - "/wireguard/config/peer9"
+#     - "/wireguard/config/peer10"
