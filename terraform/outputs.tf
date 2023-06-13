@@ -22,5 +22,5 @@ locals {
 
 resource "local_file" "wirehole_inventory" {
   content  = local.ansible-inventory
-  filename = "../../ansible/inventory/oci_inventory"
+  filename = "../ansible/inventory/oci_inventory"
 }
