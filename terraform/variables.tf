@@ -9,8 +9,17 @@ variable "tenancy_ocid" {}
 variable "user_ocid" {}
 
 variable "region" {}
-
 variable "free_tier_availability_domain" {}
+variable "availability_domain_number" {
+  default = 1
+}
+
+variable "vcn_cidr_block" {
+  default = "10.1.0.0/16"
+}
+variable "subnet_cidr_block" {
+  default = "10.1.0.0/24"
+}
 
 variable "display_name" {
   default = "Sandbox"
@@ -19,19 +28,13 @@ variable "instance_display_name" {
   default = "Wireguard"
 }
 
-variable "vcn_cidr_block" {
-  default = "10.1.0.0/16"
+variable "wireguard_port" {
+  default = 51820
 }
-
-variable "availability_domain_number" {
-  default = 1
-}
-
 variable "instance_shape" {
   # Free-Tier is VM.Standard.E2.1.Micro
   default = "VM.Standard.E2.1.Micro"
 }
-
 
 variable "instance_image_ocid" {
   type = map(any)

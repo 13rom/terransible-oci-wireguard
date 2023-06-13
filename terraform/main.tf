@@ -15,7 +15,7 @@ resource "oci_core_vcn" "wirehole_vcn" {
 
 resource "oci_core_subnet" "wirehole_subnet" {
   availability_domain = var.free_tier_availability_domain
-  cidr_block          = "10.1.0.0/24"
+  cidr_block          = var.subnet_cidr_block
   display_name        = "${var.display_name}-Subnet"
   dns_label           = "${var.display_name}-Subnet"
   security_list_ids   = [oci_core_security_list.wirehole_security_list.id]
@@ -83,8 +83,8 @@ resource "oci_core_security_list" "wirehole_security_list" {
       }
 
       // These values correspond to the destination port range.
-      min = 51820
-      max = 51820
+      min = var.wireguard_port
+      max = var.wireguard_port
     }
   }
 
