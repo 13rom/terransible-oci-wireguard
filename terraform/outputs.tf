@@ -48,6 +48,6 @@ resource "local_file" "ssh_config" {
 }
 
 resource "local_file" "compose-env" {
-  content  = local.ssh-config
+  content  = local.docker-compose-env
   filename = "../ansible/files/.env"
 }
