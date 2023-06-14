@@ -1,11 +1,12 @@
 .terraform/
+.terraform.lock.hcl
 *.tfstate*
 *.tfvars
 *.pem
 crash.log
 *wg_client_configs/
-*ansible.cfg
 originals/
 .DS_Store
 *_inventory
 .ssh
+.env
