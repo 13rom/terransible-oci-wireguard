@@ -14,22 +14,7 @@
   ansible.builtin.debug:
     var: output
 
-- name: Pause before finishing
-  pause:
-    seconds: 15
-# - name: Copy individual files
-#   synchronize:
-#     src: "{{ item }}"
-#     dest: ../wg_client_configs/oci
-#     mode: pull
-#   with_items:
-#     - "/wireguard/config/peer1"
-#     - "/wireguard/config/peer2"
-#     - "/wireguard/config/peer3"
-#     - "/wireguard/config/peer4"
-#     - "/wireguard/config/peer5"
-#     - "/wireguard/config/peer6"
-#     - "/wireguard/config/peer7"
-#     - "/wireguard/config/peer8"
-#     - "/wireguard/config/peer9"
-#     - "/wireguard/config/peer10"
+- name: Wireguard | Check Wireguard admin panel availability
+  ansible.builtin.wait_for:
+    port: "{{ wireguard_ui_port }}"
+    delay: 10
