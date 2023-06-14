@@ -17,7 +17,6 @@
 
   tasks:
     - import_tasks: tasks/docker.yml
-    - import_tasks: tasks/dockercompose.yml
     - import_tasks: tasks/oci_wireguard.yml
 
   post_tasks:

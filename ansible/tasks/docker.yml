@@ -20,8 +20,18 @@
   pip:
     name: docker
 
+- name: Docker | Install Docker-Compose plugin
+  ansible.builtin.pip:
+    name: docker-compose
+
 - name: Adding user {{ USER }} to docker group
   user:
     name: "{{ USER }}"
     groups: "docker"
     append: "yes"
+
+- name: Docker | Start docker service
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: yes
