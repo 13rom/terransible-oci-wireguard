@@ -1,61 +1,33 @@
----
-version: "3"
-
+version: "3.8"
 services:
+  wg-easy:
+    environment:
+      # ⚠️ Required:
+      # Change this to your host's public address
+      - WG_HOST=${HOST_IP}
+      # Optional:
+      - PASSWORD=tustan
+      - WG_PORT=51820
+      - WG_DEFAULT_ADDRESS=10.100.100.x
+      - WG_DEFAULT_DNS=1.1.1.1
+      - WG_MTU=1420
+      # - WG_ALLOWED_IPS=192.168.15.0/24, 10.0.1.0/24
+      # - WG_PRE_UP=echo "Pre Up" > /etc/wireguard/pre-up.txt
+      # - WG_POST_UP=echo "Post Up" > /etc/wireguard/post-up.txt
+      # - WG_PRE_DOWN=echo "Pre Down" > /etc/wireguard/pre-down.txt
+      # - WG_POST_DOWN=echo "Post Down" > /etc/wireguard/post-down.txt
 
-  # WireGuard VPN service
-  wireguard:
-    image: linuxserver/wireguard:latest
-    container_name: wireguard
+    image: weejewel/wg-easy
+    container_name: wg-easy
+    volumes:
+      - .:/etc/wireguard
+    ports:
+      - "51820:51820/udp"
+      - "51821:51821/tcp"
+    restart: unless-stopped
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
-    environment:
-      - SERVERPORT=51820
-      - SERVERURL=auto
-      - PEERS=1 # How many peers to generate for you (clients)
-      - PEERDNS=auto
-      - INTERNAL_SUBNET=10.100.100.0
-    volumes:
-      - ./config:/config
-      - /lib/modules:/lib/modules
-    ports:
-      # Port for WireGuard-UI
-      - "5000:5000"
-      # Port of the WireGuard VPN server
-      - "51820:51820/udp"
     sysctls:
+      - net.ipv4.ip_forward=1
       - net.ipv4.conf.all.src_valid_mark=1
-
-  # WireGuard-UI service
-  wireguard-ui:
-    image: ngoduykhanh/wireguard-ui:latest
-    container_name: wireguard-ui
-    depends_on:
-      - wireguard
-    cap_add:
-      - NET_ADMIN
-    # Use the network of the 'wireguard' service
-    # This enables to show active clients in the status page
-    network_mode: service:wireguard
-    environment:
-      - SENDGRID_API_KEY
-      - EMAIL_FROM_ADDRESS
-      - EMAIL_FROM_NAME
-      - SESSION_SECRET
-      - WGUI_USERNAME=admin
-      - WGUI_PASSWORD=tustan
-      - WG_CONF_TEMPLATE
-      - WGUI_MANAGE_START=true
-      - WGUI_MANAGE_RESTART=true
-      - WGUI_SERVER_INTERFACE_ADDRESSES=10.100.100.0/24
-      - WGUI_SERVER_LISTEN_PORT
-      - WGUI_SERVER_POST_UP_SCRIPT=iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
-      - WGUI_SERVER_POST_DOWN_SCRIPT=iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
-    logging:
-      driver: json-file
-      options:
-        max-size: 50m
-    volumes:
-      - ./db:/app/db
-      - ./config:/etc/wireguard
