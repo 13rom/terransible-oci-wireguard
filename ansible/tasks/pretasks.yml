@@ -4,6 +4,10 @@
     update_cache: yes
     cache_valid_time: 3600
 
+- name: Upgrade all apt packages
+  ansible.builtin.apt:
+    upgrade: dist
+
 - name: Install apt prerequisites
   ansible.builtin.package:
     name:
@@ -16,14 +20,3 @@
       - python3-pip
       - haveged
     state: latest
-
-- name: Install pip prerequisites
-  pip:
-    name:
-      - openssl>22.1.0
-      -
-    state: latest
-# - name: Upgrade all apt packages
-#   apt:
-#     upgrade: dist
-#     force_apt_get: yes
