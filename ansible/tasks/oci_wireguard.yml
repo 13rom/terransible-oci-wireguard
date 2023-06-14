@@ -1,21 +1,17 @@
 ---
-- name: Ansible copy directory to the remote server
-  copy:
+- name: Wireguard | Copy directory to remote server
+  ansible.builtin.copy:
     src: ./files/
     dest: /wireguard
 
-- name: Start Docker containers using Docker-Compose
+- name: Wireguard | Start Docker containers using Docker-Compose
   community.docker.docker_compose:
     project_src: /wireguard
     state: present
   register: output
 
-# - name: Start Docker containers using Docker-Compose
-#   command: docker-compose -f /wireguard/docker-compose.yml up -d
-#   register: output
-
-- name: Watch docker-compose output
-  debug:
+- name: Wireguard | Watch docker-compose output
+  ansible.builtin.debug:
     var: output
 
 - name: Pause before finishing

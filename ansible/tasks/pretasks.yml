@@ -1,14 +1,14 @@
 ---
-- name: Run "apt-get update"
+- name: Pre | Run "apt-get update"
   ansible.builtin.apt:
     update_cache: yes
     cache_valid_time: 3600
 
-- name: Upgrade all apt packages
+- name: Pre | Upgrade all apt packages
   ansible.builtin.apt:
     upgrade: dist
 
-- name: Install apt prerequisites
+- name: Pre | Install apt prerequisites
   ansible.builtin.package:
     name:
       - curl
