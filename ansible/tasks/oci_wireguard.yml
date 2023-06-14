@@ -5,8 +5,14 @@
     dest: /wireguard
 
 - name: Start Docker containers using Docker-Compose
-  command: docker-compose -f /wireguard/docker-compose.yml up -d
+  community.docker.docker_compose:
+    project_src: /wireguard
+    state: present
   register: output
+
+# - name: Start Docker containers using Docker-Compose
+#   command: docker-compose -f /wireguard/docker-compose.yml up -d
+#   register: output
 
 - name: Watch docker-compose output
   debug:
