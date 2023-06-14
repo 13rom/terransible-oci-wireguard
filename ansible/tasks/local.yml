@@ -1,3 +1,0 @@
----
-  - name: create local client config directory
-    file: path=../wg_client_configs state=directory mode=0755
