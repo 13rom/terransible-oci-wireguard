@@ -1,16 +1,21 @@
 output "instance_id" {
-  description = "ocid of created instances. "
+  description = "ocid of created instances."
   value       = oci_core_instance.wireguard_instance.id
 }
 
 output "private_ip" {
-  description = "Private IPs of created instances. "
+  description = "Private IPs of created instances."
   value       = oci_core_instance.wireguard_instance.private_ip
 }
 
 output "public_ip" {
-  description = "Public IPs of created instances. "
+  description = "Public IPs of created instances."
   value       = oci_core_instance.wireguard_instance.public_ip
+}
+
+output "wireguard_ui_address" {
+  description = "Wireguard server web ui address."
+  value       = "http://${oci_core_instance.wireguard_instance.public_ip}:${var.wireguard_ui_port}"
 }
 
 locals {
