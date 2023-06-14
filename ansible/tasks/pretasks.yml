@@ -1,12 +1,11 @@
 ---
-- name: Update apt-get repo and cache
-  apt:
+- name: Run "apt-get update"
+  ansible.builtin.apt:
     update_cache: yes
-    force_apt_get: yes
     cache_valid_time: 3600
 
-- name: Install prerequisites
-  package:
+- name: Install apt prerequisites
+  ansible.builtin.package:
     name:
       - curl
       - git
@@ -16,9 +15,15 @@
       - software-properties-common
       - python3-pip
       - haveged
-    state: present
+    state: latest
 
-- name: Upgrade all apt packages
-  apt:
-    upgrade: dist
-    force_apt_get: yes
+- name: Install pip prerequisites
+  pip:
+    name:
+      - openssl>22.1.0
+      -
+    state: latest
+# - name: Upgrade all apt packages
+#   apt:
+#     upgrade: dist
+#     force_apt_get: yes
